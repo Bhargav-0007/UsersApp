@@ -3,14 +3,14 @@ package com.example.library.Controller;
 import com.example.library.Entity.User;
 import com.example.library.Exception.InvalidCredentialsException;
 import com.example.library.Exception.UserAlreadyExistsException;
+import com.example.library.Exception.UserNotFoundException;
 import com.example.library.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -39,5 +39,41 @@ public class UserController {
         } catch (InvalidCredentialsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    // Get all users
+    @GetMapping("/getall")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // Get user by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            User user = userService.getUserById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Delete user by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        try {
+            userService.deleteUserById(id);
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Delete all users
+    @DeleteMapping("/all")
+    public ResponseEntity<String> deleteAllUsers() {
+        userService.deleteAllUsers();
+        return new ResponseEntity<>("All users deleted successfully", HttpStatus.OK);
     }
 }
