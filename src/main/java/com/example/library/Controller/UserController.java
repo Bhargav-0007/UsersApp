@@ -1,0 +1,43 @@
+package com.example.library.Controller;
+
+import com.example.library.Entity.User;
+import com.example.library.Exception.InvalidCredentialsException;
+import com.example.library.Exception.UserAlreadyExistsException;
+import com.example.library.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    // Register a new user
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User savedUser = userService.RegisterUser(user);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        } catch (UserAlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    // Login user
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User loginRequest) {
+        try {
+            User loggedInUser = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+            return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
+        } catch (InvalidCredentialsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+}
