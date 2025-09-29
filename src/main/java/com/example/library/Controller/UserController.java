@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     /*Register a new user
-    @PostMapping("/register")
+    @PostMapping("/register") //No need to use try catch if we are using global exception handler
     public ResponseEntity<?> registerUser(@RequestBody User user) {
           try {
                 User savedUser = userService.RegisterUser(user);
@@ -35,7 +35,6 @@ public class UserController {
         User savedUser = userService.RegisterUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
-
 
     /*Login user
     @PostMapping("/login")
@@ -61,7 +60,7 @@ public class UserController {
     }
 
     // Get user by ID
-    @GetMapping("/{id}")
+   /* @GetMapping("/{id}")//No need to use try catch if we are using global exception handler
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             User user = userService.getUserById(id);
@@ -69,10 +68,17 @@ public class UserController {
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+
     // Delete user by ID
-    @DeleteMapping("/{id}")
+    /*@DeleteMapping("/{id}") //No need to use try catch if we are using global exception handler
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         try {
             userService.deleteUserById(id);
@@ -80,7 +86,13 @@ public class UserController {
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }*/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
+
 
     // Delete all users
     @DeleteMapping("/all")

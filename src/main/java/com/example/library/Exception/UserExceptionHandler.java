@@ -33,7 +33,7 @@ public class UserExceptionHandler {
     public ResponseEntity<?> handleUserException(UserAlreadyExistsException ex) {
      Map<String, String> error = new HashMap<>();
     error.put("Duplicate", ex.getMessage());
-      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
@@ -42,5 +42,13 @@ public class UserExceptionHandler {
         error.put("Invalid", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> handleUserException(UserNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("Not Found", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
 }
