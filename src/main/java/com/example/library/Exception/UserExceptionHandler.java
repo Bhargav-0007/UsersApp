@@ -31,10 +31,16 @@ public class UserExceptionHandler {
     // Handle custom user exceptions
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserException(UserAlreadyExistsException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+     Map<String, String> error = new HashMap<>();
+    error.put("Duplicate", ex.getMessage());
+      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> handleUserException(InvalidCredentialsException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("Invalid", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
 }

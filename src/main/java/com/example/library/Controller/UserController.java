@@ -19,18 +19,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Register a new user
+    /*Register a new user
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        try {
-            User savedUser = userService.RegisterUser(user);
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+          try {
+                User savedUser = userService.RegisterUser(user);
+                return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+            } catch (UserAlreadyExistsException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
+    }*/
+
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User savedUser = userService.RegisterUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    // Login user
+
+    /*Login user
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User loginRequest) {
         try {
@@ -39,6 +46,11 @@ public class UserController {
         } catch (InvalidCredentialsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }*/
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User user) {
+        User loggedInUser = userService.loginUser(user.getEmail(), user.getPassword());
+        return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
     }
 
     // Get all users
