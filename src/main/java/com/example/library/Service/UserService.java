@@ -18,13 +18,10 @@ public class UserService {
 
     //Register New User
     public User RegisterUser(User user) {
-        // Checks if email already exists
         userRepo.findByEmail(user.getEmail())
                 .ifPresent(exists -> {
             throw new UserAlreadyExistsException("Email already registered: "+ user.getEmail());
         });
-
-        // Save user
         return userRepo.save(user);
     }
     /*public User RegisterUser(User user) {
