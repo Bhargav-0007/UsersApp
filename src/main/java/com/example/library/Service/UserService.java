@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -26,6 +27,14 @@ public class UserService {
         // Save user
         return userRepo.save(user);
     }
+    /*public User RegisterUser(User user) {
+        Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
+            throw new UserAlreadyExistsException("Email already registered: " + user.getEmail());
+        }
+        return userRepo.save(user);
+    }*/
+
 
     //Login User
     public User loginUser(String email, String password) {
@@ -33,6 +42,21 @@ public class UserService {
                 .filter(user -> user.getPassword().equals(password))
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
     }
+
+    /*public User loginUser(String email, String password) {
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getPassword().equals(password)) {
+                return user;
+            } else {
+                throw new InvalidCredentialsException("Invalid email or password");
+            }
+        } else {
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
+    }*/
+
 
     // Get all users
     public List<User> getAllUsers() {
@@ -44,6 +68,15 @@ public class UserService {
         return userRepo.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     }
+    /*public User getUserById(Long id) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new UserNotFoundException("User with id " + id + " not found");
+        }
+    }*/
+
 
     // Delete user by ID
     public void deleteUserById(Long id) throws UserNotFoundException {
